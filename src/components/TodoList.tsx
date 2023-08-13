@@ -1,10 +1,27 @@
+require('dotenv').config // to load environment variables
 import { Todo } from "@/lib/drizzle";
 
 const getData = async () => {
+
+    //  retrieving the url of deployed version
+    const deployedURL = process.env.REACT_APP_URL
+
+    // will use this variable to condtionally set absolute url path
+    let isLocalHost: boolean = false
+
+    // checking localhost using window object since this code will be rendered on server and window object dosent exist on server
+    if (typeof window === undefined) {
+        isLocalHost = true
+    }
+
+    // setting site URL using ternary operator
+    const siteUrl = isLocalHost ? "http://localhost:3000" : deployedURL
+
     try {
-        const res = await fetch("http://127.0.0.1:3000/api/todo", {
+        // attaching the api path to site URL
+        const res = await fetch(`${siteUrl}/api/todo`, {
             method: "GET",
-            cache:"no-store",
+            cache: "no-store",
             headers: {
                 "Content-Type": "application/json"
             }
